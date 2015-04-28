@@ -8,27 +8,29 @@ function getNumRequests() {
 // Called when the search button is clicked. Formulates an arbitrary number of queries
 // of the Github API
 function queryGists() {
-    for (var i = 1; i <= getNumRequests(); i++) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            if (request.readyState === 4 && request.status === 200) {
-                httpRequestCallback(request);
-            }
-        }
-        request.open("GET", "https://api.github.com/gists/public?page="+i, true);
-        request.send();
+    var requests = [];
+    for (var i = 0; i < getNumRequests(); i++) {
+        requests[i] = new XMLHttpRequest();
+        // Page numbers in the Github API are indexed from 1, not 0.
+        requests[i].open("GET", "https://api.github.com/gists/public?page="+(i+1), true);
+        requests[i].onreadystatechange = getHttpRequestCallback(requests[i]);
+        requests[i].send();
     }
 }
 
-// Called by the HttpRequest when it is finished communicating with the server
-function httpRequestCallback(request) {
-    var gistArray = JSON.parse(request.responseText);
-    displayResults(gistArray);
+// Returns a function which should be called by the HttpRequest when it is 
+// finished communicating with the server. Should be set as the onreadystatechange callback
+function getHttpRequestCallback(request) {
+    return function() {
+        if (request.readyState === 4 && request.status === 200) {
+            var gistArray = JSON.parse(request.responseText);
+            displayResults(gistArray);
+        }
+    }
 }
 
 // Displays gists to the screen. Input should be an array of gist objects
 function displayResults(gists) {
-    console.log("Inside displayResults");
     var resultsDiv = document.getElementById("results");
     for (var i = 0; i < gists.length; i++) {
         var url = gists[i].html_url;
