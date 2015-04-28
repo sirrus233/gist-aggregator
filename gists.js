@@ -18,6 +18,7 @@ function queryGists() {
         requests[i] = new XMLHttpRequest();
         // Page numbers in the Github API are indexed from 1, not 0.
         requests[i].open("GET", "https://api.github.com/gists/public?page="+(i+1), true);
+        // Call a function that returns another function, which gets assigned to this property
         requests[i].onreadystatechange = getHttpRequestCallback(requests[i]);
         requests[i].send();
     }
@@ -65,9 +66,16 @@ function createResultElement(url, desc, favorite) {
     var fav = document.createElement('button');
     fav.type = "button";
     if (favorite) {
+        // TRICKY: Cannot simply assign the "addFavorite" function here, because we 
+        // can't pass it parameters that way (it's an assignment of the function to a 
+        // variable, not an actual call of the function). To get around this, we create
+        // an anonymous function that wraps a *call* to addFavorite(), and then assign
+        // that anonymous function to the onclick property. Similar trick to how
+        // the callback function was assigned to XMLHttpRequest.onreadystatechange
         fav.onclick = function() {addFavorite(url, desc)};
         fav.appendChild(document.createTextNode("Favorite"));
     } else {
+        // See above comment
         fav.onclick = function() {removeFavorite(url, desc)};
         fav.appendChild(document.createTextNode("Unfavorite"));
     }
