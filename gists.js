@@ -38,6 +38,9 @@ function displayResults(gists) {
     for (var i = 0; i < gists.length; i++) {
         var url = gists[i].html_url;
         var desc = gists[i].description;
+        if (desc === "null" || desc === "") {
+            desc = "Untitled";
+        }
         var gistDiv = document.createElement('div');
         gistDiv.innerHTML = "<a href=\""+url+"\">"+desc+"</a>";
         resultsDiv.appendChild(gistDiv);
