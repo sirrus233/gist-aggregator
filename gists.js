@@ -34,6 +34,7 @@ function getHttpRequestCallback(request) {
             }
             var gistArray = JSON.parse(request.responseText);
             displayResults(gistArray);
+            filterResults();
         }
     }
 }
@@ -108,10 +109,24 @@ function deleteFavorites() {
 function addFavorite(key, val) {
     localStorage.setItem(key, val);
     loadFavorites();
+    filterResults();
 }
 
 // Removes a Gist from the list of favorites in localStorage. Key should be the url of the Gist
 function removeFavorite(key) {
     localStorage.removeItem(key);
     loadFavorites();
+}
+
+// Remove any favorited Gists from the currently displayed results. A Gist should appear in either
+// the results list or the favorites list, but never both
+function filterResults() {
+    var resultElements = document.getElementById("results").childNodes;
+    for (var i = 0; i < resultElements.length; i++) {
+        var url = resultElements[i].firstElementChild.href;
+        if (localStorage.getItem(url) != null) {
+            // The element represents a favorited Gist, and must be removed
+            document.getElementById("results").removeChild(resultElements[i]);
+        }
+    }
 }
