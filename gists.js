@@ -8,6 +8,9 @@ function getNumRequests() {
 // Called when the search button is clicked. Formulates an arbitrary number of queries
 // of the Github API
 function queryGists() {
+    // Clear any old results that may exist in the "results" div
+    document.getElementById("results").innerHTML = "";
+
     var requests = [];
     for (var i = 0; i < getNumRequests(); i++) {
         requests[i] = new XMLHttpRequest();
