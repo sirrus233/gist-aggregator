@@ -1,4 +1,4 @@
-var DEBUG = true;
+var DEBUG = false;
 
 // Returns how many pages of results the user wants to see, by reading the selector
 // in the html
