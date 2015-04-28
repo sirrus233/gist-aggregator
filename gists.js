@@ -1,3 +1,5 @@
+var DEBUG = true;
+
 // Returns how many pages of results the user wants to see, by reading the selector
 // in the html
 function getNumRequests() {
@@ -26,6 +28,9 @@ function queryGists() {
 function getHttpRequestCallback(request) {
     return function() {
         if (request.readyState === 4 && request.status === 200) {
+            if (DEBUG) {
+                console.log(request.responseText);
+            }
             var gistArray = JSON.parse(request.responseText);
             displayResults(gistArray);
         }
@@ -41,8 +46,26 @@ function displayResults(gists) {
         if (desc === "null" || desc === "") {
             desc = "Untitled";
         }
-        var gistDiv = document.createElement('div');
-        gistDiv.innerHTML = "<a href=\""+url+"\">"+desc+"</a>";
-        resultsDiv.appendChild(gistDiv);
+        resultsDiv.appendChild(createResultElement(url, desc));
     }
+}
+
+// Builds a single result element to insert into the document
+function createResultElement(url, desc) {
+    // Simple div to hold result
+    var result = document.createElement('div');
+
+    // Link to the Gist
+    var link = document.createElement('a');
+    link.href = url;
+    link.appendChild(document.createTextNode(desc));
+    result.appendChild(link); 
+
+    // Favorite button
+    var fav = document.createElement('button');
+    fav.type = "button";
+    fav.appendChild(document.createTextNode("Favorite"));
+    result.appendChild(fav); 
+
+    return result;
 }
