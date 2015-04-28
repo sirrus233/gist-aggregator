@@ -28,7 +28,13 @@ function httpRequestCallback(request) {
 
 // Displays gists to the screen. Input should be an array of gist objects
 function displayResults(gists) {
+    console.log("Inside displayResults");
+    var resultsDiv = document.getElementById("results");
     for (var i = 0; i < gists.length; i++) {
-        console.log(gists[i].description);
+        var url = gists[i].html_url;
+        var desc = gists[i].description;
+        var gistDiv = document.createElement('div');
+        gistDiv.innerHTML = "<a href=\""+url+"\">"+desc+"</a>";
+        resultsDiv.appendChild(gistDiv);
     }
 }
