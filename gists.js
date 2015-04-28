@@ -76,7 +76,7 @@ function createResultElement(url, desc, favorite) {
         fav.appendChild(document.createTextNode("Favorite"));
     } else {
         // See above comment
-        fav.onclick = function() {removeFavorite(url, desc)};
+        fav.onclick = function() {removeFavorite(url)};
         fav.appendChild(document.createTextNode("Unfavorite"));
     }
     result.appendChild(fav); 
@@ -103,11 +103,15 @@ function deleteFavorites() {
     loadFavorites();
 }
 
-function addFavorite(url, desc) {
-    localStorage.setItem(url, desc);
+// Adds a new favorite Gist to localStorage. Key should be the url of the Gist (since this is
+// unique) and val is the description of the Gist
+function addFavorite(key, val) {
+    localStorage.setItem(key, val);
     loadFavorites();
 }
 
-function removeFavorite(url, desc) {
-    //TODO
+// Removes a Gist from the list of favorites in localStorage. Key should be the url of the Gist
+function removeFavorite(key) {
+    localStorage.removeItem(key);
+    loadFavorites();
 }
