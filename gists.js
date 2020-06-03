@@ -104,6 +104,11 @@ function deleteFavorites() {
     loadFavorites();
 }
 
+// Delete the queried results from the DOM
+function deleteResults() {
+    document.getElementById("results").innerHTML = "";
+}
+
 // Adds a new favorite Gist to localStorage. Key should be the url of the Gist (since this is
 // unique) and val is the description of the Gist
 function addFavorite(key, val) {
